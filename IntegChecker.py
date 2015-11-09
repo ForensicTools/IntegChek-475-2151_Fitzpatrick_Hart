@@ -1,8 +1,27 @@
 from optparse import OptionParser   #depenency for command line options
 import os                           #import os module for os.walk function
 import hashlib                      #import hashlib module for those juicy hash digests
-import errno
+import errno			    #import errno for error tracking/logging
+import urllib2			    #import urllib2 for sending requests to Meta-scan
+import time			    #import time for debugging/error handling and logging
+#############################################################################################
+#Variables for Meta-Scan API
 
+global glob_apiKey
+global glob_hashLookUpUrl
+global glob_hashResultUrl
+global glob_fileUploadUrl
+
+#Metascan API key
+glob_apiKey = 'apikeygoeshere'   
+#Metascan API hash lookup URL                   
+glob_hashLookUpUrl = 'https://hashlookup.metascan-online.com/v2/hash/'
+#Metascan API hash/file result URL
+glob_hashResultUrl = 'https://metascan-online.com/en/scanresult/file/'  
+#Metascan API file scan upload URL
+glob_fileUploadUrl = 'https://scan.metascan-online.com/v2/file'        
+
+#############################################################################################
 		
 #############################################################################################
 ##Function: hashFile
@@ -66,6 +85,47 @@ def getOptions():
      
 	 
 #############################################################################################
+
+#############################################################################################
+##Function: reqUrl()
+##Purpose: takes hash and creates url to request feedback from Metascan-Online
+##Returns: string
+#############################################################################################
+
+def makeReq(hash):
+	#create url to be requestued using globabl variable and passed value
+	requestUrl = glob_hashLookUpUrl + hash
+	#create a request varible to handle the request
+	request = urllib2.Request(requestUrl)
+	#add apikey to header
+	request.add_header('apikey', glob_apiKey)
+	#try to request the url
+	try:
+		#assign the response from the url request to hashResult
+		hashResult = urllib2.urlopen(request).read().decode("utf-8")
+		#debug
+		#print "Result from hash: " + hashResult
+		#time.sleep(10)
+	#break out if error
+	except:
+		print "Error\n"
+	return hashResult
+#############################################################################################	
+
+#############################################################################################
+##Function: processResult()
+##Purpose: takes the result from Meta-Scan and parses for file status (Infected, Suspicious, Clean)
+##Returns: string
+#############################################################################################
+
+def processResult(requestResult):
+	#open appropiate log files to write out results
+	c = open("Clean_Files.log", "w")
+	s = open("Suspicious_Files.log", "w")
+	i = open("Infected_Files.log", "w")
+	
+#############################################################################################
+
 def main():
 	
 	#Call getOptions to grab CLI arguments
