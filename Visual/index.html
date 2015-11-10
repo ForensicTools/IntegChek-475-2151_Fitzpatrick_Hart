@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Windows Integrity Results</title>
+    <link href="./assets/css/indicator.css" rel="stylesheet">
+    <script type="text/javascript" src="https://ajax.googleapis.com/ajax/libs/angularjs/1.3.0-rc.4/angular.min.js"></script>
+    <script src="./assets/js/d3.v3.min.js"></script> 
+
+<style>
+table, th, td {
+    border-collapse: collapse;
+}
+th, td {
+    padding: 20px;
+}
+</style>
+
+</head>
+<body ng-app="indicator">
+
+<h1>Windows Integrity Results</h1>
+
+<table align="center">
+
+<!-- This is the first row -->
+
+<tr>
+
+<td></td> <!-- This is a fake cell to center the first one -->
+
+    <td><div class="widget-container"
+        data-actual="0.95" indicator-widget></div>
+        <h2>Windows Integrity</h2>
+        </td>
+</tr>  
+       
+<!-- This is the second row -->
+
+<tr>
+
+    <td><div class="widget-container"
+        data-actual="0.90" indicator-widget></div>
+        <h2>Clean</h2>
+        </td>
+    <td><div class="widget-container"
+        data-actual="0.2" indicator-widget></div>
+        <h2>Suspicious</h2>
+        </td>
+    <td><div class="widget-container"
+        data-actual=".05" indicator-widget></div>
+        <h2>Infected</h2>
+        </td>
+        
+</tr>
+</table>
+
+<h1> Infected Files Diagram </h1>
+
+    <script type="text/javascript" src="./assets/js/indicator.js"></script>
+    <!-- 
+        So we can test this locally without running a server
+        otherwise it tries to make an XMLHttpRequest.
+
+        CONS: Not cached.
+        
+        EXAMPLE:
+        
+        <div class="widget-container"
+        	data-expected="0.901"
+        	data-actual="10.99" indicator-widget></div>
+        
+     -->
+     <script type="text/ng-template" id="indicator.html">
+        <svg class="indicator-circle" 
+            width="150" height="150" 
+            version="1.1" 
+            xmlns="http://www.w3.org/2000/svg">
+            <g>
+                <circle cx="50%" cy="50%" r="45" />
+                <text class="progress-text actual" text-anchor="middle" alignment-baseline="middle" dx="50%" dy="55%">
+                    <tspan class="actual">{{ actual_formatted }}</tspan>
+                    <tspan class="percent">%</tspan>
+                </text>
+            </g>
+            <g path-group>
+                <path class="progress-bar inner-bar normal" stroke-linejoin="round" inner-path />
+                <path class="progress-bar outer-bar" stroke-linejoin="round" outer-path />
+            </g>
+        </svg>
+     </script>
+</body>
+</html>
